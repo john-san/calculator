@@ -34,6 +34,7 @@ h1 {
   display: inline-block;
   padding-right: 15px;
   padding-bottom: 15px;
+  font-size: 24px;
 }
 
 .row {
@@ -55,6 +56,8 @@ h1 {
   align-items: center;
   cursor: pointer;
   background-color: rgb(238,238,238);
+  font-size: 20px;
+  padding: 0;
 }
 
 .btn:hover {
