@@ -55,7 +55,7 @@ class Calculator {
   }
   handleClick(val) {
     if (isANumber(val)) {
-      if (doesNotExist(this.operator)) {
+      if (this.operator == undefined) {
         this.updateFirstNumber(val);
       } else {
         this.updateSecondNumber(val);
@@ -81,11 +81,13 @@ class Calculator {
   }
 
   updateFirstNumber(val) {
-    if (doesNotExist(this.firstNumber) || this.firstNumber == '0') {
+    if (this.firstNumber == '0') {
       this.firstNumber = val;
     } else {
       this.firstNumber += val;
     }
+    updateText(mainText, this.firstNumber);
+    subText.textContent ? updateText(subText, '') : false;
   }
 
   updateOperator(operator) {
@@ -98,36 +100,50 @@ class Calculator {
         this.operator = operator;
       }
     }
+
+    updateText(subText, `${this.firstNumber} ${this.operator}`);
+    updateText(mainText, '');
   }
 
   updateSecondNumber(val) {
-    if (doesNotExist(this.secondNumber)) {
-      this.secondNumber = val;
-    } else {
+    if (this.secondNumber) {
       this.secondNumber += val;
+    } else {
+      this.secondNumber = val;
     }
+    updateText(mainText, this.secondNumber);
   }
 
   clearState() {
     this.firstNumber = '0';
     this.reset('operator');
     this.reset('secondNumber');
+    updateText(subText, '');
+    updateText(mainText, this.firstNumber);
   }
 
   delete() {
-    if (doesNotExist(this.operator)) {
-      this.firstNumber = this.firstNumber.slice(0, this.firstNumber.length - 1);
-    } else {
+    if (this.secondNumber) {
       this.secondNumber = this.secondNumber.slice(0, this.secondNumber.length - 1);
+      updateText(mainText,this.secondNumber);
+    } else if (this.operator) {
+      this.reset('operator');
+      updateText(mainText, this.firstNumber);
+      updateText(subText, '');
+    } else {
+      this.firstNumber = this.firstNumber.slice(0, this.firstNumber.length - 1);
+      updateText(mainText, this.firstNumber);
     }
   }
 
   equals() {
     if (this.firstNumber && this.operator && this.secondNumber) {
+      updateText(subText, `${this.firstNumber} ${this.operator} ${this.secondNumber} =`);
       let ans = operate(this.operator, this.firstNumber, this.secondNumber);
       this.firstNumber = ans.toString();
       this.reset('operator');
       this.reset('secondNumber');
+      updateText(mainText, ans);
     }
     
   }
@@ -135,15 +151,17 @@ class Calculator {
   handleDecimal() {
     if (this.operator) {
       if (this.secondNumber) {
-        if (!this.secondNumber.includes('.')) {
+        if (this.secondNumber.includes('.') == false) {
           this.secondNumber += '.';
         } 
       } else {
         this.secondNumber = '0.';
       }
+      updateText(mainText, this.secondNumber);
     } else {
-      if (!this.firstNumber.includes('.')) {
+      if (this.firstNumber.includes('.') == false) {
         this.firstNumber += '.';
+        updateText(mainText, this.firstNumber);
       } 
    }
   }
@@ -157,26 +175,29 @@ class Calculator {
 
 
 // helpers
-function doesNotExist(prop) {
-  return typeof prop == 'undefined';
-}
-
 function isANumber(str) {
   const numRegex = /[0-9]/;
   return numRegex.test(str);
 }
 
+function updateText(el, text) {
+  el.textContent = text;
+}
+
 
 const calc = new Calculator();
 
+const subText = document.getElementById('subDisplayText');
+const mainText = document.getElementById('mainDisplayText');
 
+
+
+updateText(mainText, calc.firstNumber);
 
 const buttons = document.querySelectorAll('.btn');
 buttons.forEach((button) => {
     button.addEventListener('click', (e) => {
-      // console.log(e.target.textContent);
       calc.handleClick(e.target.textContent);
       console.log(calc);
-      // console.log(typeof e.target.textContent);
   });
 });
