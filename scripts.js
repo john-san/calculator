@@ -53,7 +53,7 @@ class Calculator {
     this.operator;
     this.secondNumber;
   }
-  handleClick(val) {
+  handleInput(val) {
     if (isANumber(val)) {
       if (this.operator == undefined) {
         this.updateFirstNumber(val);
@@ -79,6 +79,7 @@ class Calculator {
       }
     }
   }
+
 
   updateFirstNumber(val) {
     if (this.firstNumber == '0') {
@@ -106,10 +107,10 @@ class Calculator {
   }
 
   updateSecondNumber(val) {
-    if (this.secondNumber) {
-      this.secondNumber += val;
-    } else {
+    if (this.secondNumber == '0' || this.secondNumber == undefined) {
       this.secondNumber = val;
+    } else {
+      this.secondNumber += val;
     }
     updateText(mainText, this.secondNumber);
   }
@@ -138,12 +139,16 @@ class Calculator {
 
   equals() {
     if (this.firstNumber && this.operator && this.secondNumber) {
-      updateText(subText, `${this.firstNumber} ${this.operator} ${this.secondNumber} =`);
-      let ans = operate(this.operator, this.firstNumber, this.secondNumber);
-      this.firstNumber = ans.toString();
-      this.reset('operator');
-      this.reset('secondNumber');
-      updateText(mainText, ans);
+      if(this.operator == '÷' && this.secondNumber == '0') {
+        alert("Silly rabbit, you can't divide by 0!");
+      } else {
+        updateText(subText, `${this.firstNumber} ${this.operator} ${this.secondNumber} =`);
+        let ans = operate(this.operator, this.firstNumber, this.secondNumber);
+        this.firstNumber = ans.toString();
+        this.reset('operator');
+        this.reset('secondNumber');
+        updateText(mainText, ans);
+      }
     }
     
   }
@@ -197,7 +202,52 @@ updateText(mainText, calc.firstNumber);
 const buttons = document.querySelectorAll('.btn');
 buttons.forEach((button) => {
     button.addEventListener('click', (e) => {
-      calc.handleClick(e.target.textContent);
+      calc.handleInput(e.target.textContent);
       console.log(calc);
   });
 });
+
+document.addEventListener('keydown', (e) => {
+  console.log(e.key);
+
+  const acceptedInputs = [
+    "backspace",
+    "delete",
+    "escape",
+    "enter",
+    "=",
+    "/",
+    "*",
+    "x",
+    "+",
+    "-",
+    ".",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ]
+
+  let input = e.key.toLowerCase();
+  if (acceptedInputs.includes(input)) {
+    if (input == 'backspace' || input == 'delete') {
+      input = 'DELETE';
+    } else if (input == 'escape') {
+      input = 'CLEAR';
+    } else if (input == 'enter' || input == '=') {
+      input = '=';
+    } else if (input == '/') {
+      input = '÷';
+    } else if (input == 'x' || input == '*') {
+      input = 'x';
+    } 
+    calc.handleInput(input);
+    console.log(calc);
+  }
+})
