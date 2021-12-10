@@ -1,6 +1,25 @@
 body {
   font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 90vh;
 }
+
+footer {
+  text-align: center;
+  margin-top: auto;
+}
+
+footer i {
+  color: black;
+  transition: transform .1s ease-in-out;
+}
+
+footer i:hover {
+  transform: scale(1.1);
+}
+
 h1 {
   text-align: center;
 }
@@ -74,9 +93,6 @@ h1 {
   filter: brightness(80%);
 }
 
-.clear, .delete {
-  flex-grow: 1;
-}
 
 .clear {
   background-color: rgb(255,170,170);

@@ -15,13 +15,16 @@ function divide(a,b) {
 }
 
 function operate(operator, num1, num2) {
-  if (typeof num1 == 'string') {
-    num1 = parseFloat(num1);
+  function convertToNumber(str) {
+    if (str.includes('%')) {
+      str = parseFloat(str) * .01;
+    } else {
+      str = parseFloat(str);
+    }
+    return str;
   }
-
-  if (typeof num2 == 'string') {
-    num2 = parseFloat(num2);
-  }
+    num1 = convertToNumber(num1);
+    num2 = convertToNumber(num2);
 
   let ans;
   switch (operator) {
@@ -55,17 +58,19 @@ class Calculator {
   }
   handleInput(val) {
     if (isANumber(val)) {
-      if (this.operator == undefined) {
+      if (this.firstNumber.includes('%') || this.secondNumber && this.secondNumber.includes('%')) {
+        this.addNumberAfterPercent(val);
+      } else if (this.operator == undefined) {
         this.updateFirstNumber(val);
       } else {
         this.updateSecondNumber(val);
       }
     } else {
       switch (val) {
-        case "CLEAR":
+        case "C":
           this.clearState();
           break;
-        case "DELETE":
+        case "DEL":
           this.delete();
           break;
         case "=":
@@ -73,6 +78,12 @@ class Calculator {
           break;
         case ".":
           this.handleDecimal();
+          break;
+        case "+/-":
+          this.reverseSign();
+          break;
+        case "%":
+          this.addPercent();
           break;
         default:
           this.updateOperator(val);
@@ -171,6 +182,59 @@ class Calculator {
    }
   }
 
+  reverseSign() {
+    if (this.operator) {
+      if (this.secondNumber) {
+        if (this.secondNumber.includes('-')) {
+          this.secondNumber = this.secondNumber.replace("-", '');
+          } else {
+            this.secondNumber = '-' + this.secondNumber;
+          }
+      } else {
+        if (this.secondNumber == undefined) {
+          this.secondNumber = '-';
+        } else {
+          this.secondNumber = '-' + this.secondNumber;
+        }
+      }
+
+      updateText(mainText, this.secondNumber);
+    } else {
+      if (this.firstNumber.includes('-')) {
+        this.firstNumber = this.firstNumber.replace("-", '');
+      } else {
+        this.firstNumber = '-' + this.firstNumber;
+      }
+
+      updateText(mainText, this.firstNumber);
+    }
+  }
+  addPercent() {
+    console.log('adding percent');
+    if (this.secondNumber) {
+      if (this.secondNumber.includes('%') == false) {
+        this.secondNumber += '%';
+        updateText(mainText, this.secondNumber);
+      }
+    } else if (this.firstNumber.includes('%') == false) {
+      this.firstNumber += '%';
+      updateText(mainText, this.firstNumber);
+    }
+  }
+  addNumberAfterPercent(val) {
+    if (this.secondNumber == undefined) {
+      this.operator = 'x';
+    
+    } else if (this.secondNumber && this.secondNumber.includes('%')) {
+      this.equals();
+      this.operator= 'x';
+    }
+
+    this.updateSecondNumber(val);
+    updateText(subText, `${this.firstNumber} ${this.operator}`);
+    updateText(mainText, this.secondNumber);
+  }
+
   reset(propName) {
     this[propName] = undefined;
   }
@@ -202,6 +266,7 @@ updateText(mainText, calc.firstNumber);
 const buttons = document.querySelectorAll('.btn');
 buttons.forEach((button) => {
     button.addEventListener('click', (e) => {
+      console.log(e.target.textContent);
       calc.handleInput(e.target.textContent);
       console.log(calc);
   });
@@ -237,9 +302,9 @@ document.addEventListener('keydown', (e) => {
   let input = e.key.toLowerCase();
   if (acceptedInputs.includes(input)) {
     if (input == 'backspace' || input == 'delete') {
-      input = 'DELETE';
+      input = 'DEL';
     } else if (input == 'escape') {
-      input = 'CLEAR';
+      input = 'C';
     } else if (input == 'enter' || input == '=') {
       input = '=';
     } else if (input == '/') {
