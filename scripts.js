@@ -208,7 +208,7 @@ buttons.forEach((button) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  console.log(e.key);
+  // console.log(e.key);
 
   const acceptedInputs = [
     "backspace",
