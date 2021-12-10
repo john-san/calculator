@@ -95,6 +95,8 @@ class Calculator {
   updateFirstNumber(val) {
     if (this.firstNumber == '0') {
       this.firstNumber = val;
+    } else if (this.firstNumber == '-0') {
+      this.firstNumber = '-' + val;
     } else {
       this.firstNumber += val;
     }
@@ -150,7 +152,7 @@ class Calculator {
 
   equals() {
     if (this.firstNumber && this.operator && this.secondNumber) {
-      if(this.operator == '÷' && this.secondNumber == '0') {
+      if(this.operator == '÷' && this.secondNumber == '0' || this.operator == '÷' && this.secondNumber == '0%') {
         alert("Silly rabbit, you can't divide by 0!");
       } else {
         updateText(subText, `${this.firstNumber} ${this.operator} ${this.secondNumber} =`);
@@ -210,19 +212,23 @@ class Calculator {
     }
   }
   addPercent() {
-    console.log('adding percent');
     if (this.secondNumber) {
       if (this.secondNumber.includes('%') == false) {
         this.secondNumber += '%';
         updateText(mainText, this.secondNumber);
       }
     } else if (this.firstNumber.includes('%') == false) {
-      this.firstNumber += '%';
+      if (this.firstNumber === '') {
+        this.firstNumber = '0%';
+      } else {
+        this.firstNumber += '%';
+      }
+
       updateText(mainText, this.firstNumber);
     }
   }
   addNumberAfterPercent(val) {
-    if (this.secondNumber == undefined) {
+    if (this.secondNumber == undefined && this.operator == undefined) {
       this.operator = 'x';
     
     } else if (this.secondNumber && this.secondNumber.includes('%')) {
@@ -266,13 +272,13 @@ updateText(mainText, calc.firstNumber);
 const buttons = document.querySelectorAll('.btn');
 buttons.forEach((button) => {
     button.addEventListener('click', (e) => {
-      console.log(e.target.textContent);
+      // console.log(e.target.textContent);
       calc.handleInput(e.target.textContent);
       console.log(calc);
   });
 });
 
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keyup', (e) => {
   // console.log(e.key);
 
   const acceptedInputs = [
@@ -287,6 +293,7 @@ document.addEventListener('keydown', (e) => {
     "+",
     "-",
     ".",
+    "%",
     "0",
     "1",
     "2",

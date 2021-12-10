@@ -1,9 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+
+:root {
+  --rangoon-green: #090A08;
+  --celery: #9cd161;
+  --limeade: #427e04;
+  --boulder: #7C7C7C;
+  --button-text: #f9f9f9;
+  --sunglo: #e8736d;
+}
+
 body {
   font-size: 18px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 90vh;
+  gap: 15px;
+  background: black;
+  font-family: 'Roboto', sans-serif;
 }
 
 footer {
@@ -12,16 +26,12 @@ footer {
 }
 
 footer i {
-  color: black;
+  color: var(--limeade);
   transition: transform .1s ease-in-out;
 }
 
 footer i:hover {
-  transform: scale(1.1);
-}
-
-h1 {
-  text-align: center;
+  transform: scale(1.2);
 }
 
 #calculatorContainer {
@@ -36,6 +46,7 @@ h1 {
   max-width: 350px;
   margin: 0 auto;
   gap: 15px;
+  background: #010101;
 }
 
 .display {
@@ -47,10 +58,11 @@ h1 {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: flex-end;
-  background: rgb(238, 238, 238);
   text-align: right;
   word-wrap: break-word;
   word-break: break-all;
+  background: black;
+  color: white;
 }
 
 #mainDisplayText {
@@ -60,6 +72,7 @@ h1 {
 
 #subDisplayText {
   padding-right: 15px;
+  font-size: 32px;
 }
 
 .row {
@@ -72,31 +85,50 @@ h1 {
 
 
 .btn {
-  border: 2px solid black;
-  border-radius: 4px;
+  border: 2px solid #2d2d2d;
+  background: #171717;
+  color: var(--button-text);
+  border-radius: 50%;
   width: 75px;
-  height: 50px;
+  height: 75px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  background-color: rgb(238,238,238);
-  font-size: 20px;
+  font-size: 28px;
   padding: 0;
+  
+  transition: font-size .1s ease-out,
+  filter .1s ease-in-out;
 }
 
 .btn:hover {
-  filter: brightness(90%);
+  filter: brightness(150%);
 }
 
 .btn:active {
-  filter: brightness(80%);
+  filter: brightness(200%);
+  font-size: 20px;
 }
 
 
 .clear {
-  background-color: rgb(255,170,170);
+  color: var(--sunglo);
 }
 .delete {
-  background-color: rgb(170,170,255);
+  font-size: 20px;
+}
+
+.delete:active {
+  font-size: 16px;
+}
+
+.func {
+  color: var(--celery);
+}
+
+.equal {
+  background: var(--limeade);
+  color: white;
+  border: none;
 }
