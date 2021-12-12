@@ -169,15 +169,17 @@ class Calculator {
   handleDecimal() {
     if (this.operator) {
       if (this.secondNumber) {
-        if (this.secondNumber.includes('.') == false) {
+        if (this.secondNumber.includes('.') == false && this.secondNumber.includes('%') == false) {
           this.secondNumber += '.';
         } 
+      } else if (this.secondNumber.includes('%')) {
+        console.log('second number has a decimal');
       } else {
         this.secondNumber = '0.';
       }
       updateText(mainText, this.secondNumber);
     } else {
-      if (this.firstNumber.includes('.') == false) {
+      if (this.firstNumber.includes('.') == false && this.firstNumber.includes('%') == false) {
         this.firstNumber += '.';
         updateText(mainText, this.firstNumber);
       } 
@@ -230,15 +232,19 @@ class Calculator {
   addNumberAfterPercent(val) {
     if (this.secondNumber == undefined && this.operator == undefined) {
       this.operator = 'x';
-    
+      this.updateSecondNumber(val);
+      updateText(subText, `${this.firstNumber} ${this.operator}`);
+      updateText(mainText, this.secondNumber);
+    } else if (this.secondNumber == '0%') {
+      console.log("can't divide by 0%");
     } else if (this.secondNumber && this.secondNumber.includes('%')) {
       this.equals();
       this.operator= 'x';
+      this.updateSecondNumber(val);
+      updateText(subText, `${this.firstNumber} ${this.operator}`);
+    } else {
+      this.updateSecondNumber(val);
     }
-
-    this.updateSecondNumber(val);
-    updateText(subText, `${this.firstNumber} ${this.operator}`);
-    updateText(mainText, this.secondNumber);
   }
 
   reset(propName) {
